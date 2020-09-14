@@ -42,16 +42,20 @@ module Docx
         end
 
         # Return paragraph as a <p></p> HTML fragment with formatting based on properties.
-        def to_html
+        def to_html(with_style_wrapper: true, allowed_tags: [:a, :strong, :em])
           html = ''
           text_runs.each do |text_run|
-            html << text_run.to_html
+            html << text_run.to_html(with_style_wrapper, allowed_tags)
           end
-          styles = { 'font-size' => "#{font_size}pt" }
-          styles['text-align'] = alignment if alignment
-          html_tag(:p, content: html, styles: styles)
-        end
 
+          if with_style_wrapper
+            styles = { 'font-size' => "#{font_size}pt" }
+            styles['text-align'] = alignment if alignment
+            html_tag(:p, content: html, styles: styles)
+          else
+            html
+          end
+        end
 
         # Array of text runs contained within paragraph
         def text_runs

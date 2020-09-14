@@ -67,17 +67,21 @@ module Docx
         end
 
         # Return text as a HTML fragment with formatting based on properties.
-        def to_html
+        def to_html(with_style_wrapper, allowed_tags)
           html = @text
-          html = html_tag(:em, content: html) if italicized?
-          html = html_tag(:strong, content: html) if bolded?
-          styles = {}
-          styles['text-decoration'] = 'underline' if underlined?
-          # No need to be granular with font size down to the span level if it doesn't vary.
-          styles['font-size'] = "#{font_size}pt" if font_size != @font_size 
-          html = html_tag(:span, content: html, styles: styles) unless styles.empty?
-          html = html_tag(:a, content: html, attributes: {href: href, target: "_blank"}) if hyperlink?
-          return html
+          html = html_tag(:em, content: html) if italicized? && allowed_tags.include?(:em)
+          html = html_tag(:strong, content: html) if bolded? && allowed_tags.include?(:strong)
+          html = html_tag(:a, content: html, attributes: {href: href, target: "_blank"}) if hyperlink? && allowed_tags.include?(:a)
+
+          if with_style_wrapper
+            styles = {}
+            styles['text-decoration'] = 'underline' if underlined?
+            # No need to be granular with font size down to the span level if it doesn't vary.
+            styles['font-size'] = "#{font_size}pt" if font_size != @font_size 
+            html = html_tag(:span, content: html, styles: styles) unless styles.empty?
+          end
+
+          html
         end
 
         def italicized?
