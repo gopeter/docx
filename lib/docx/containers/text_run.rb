@@ -1,5 +1,5 @@
+require 'htmlentities'
 require 'docx/containers/container'
-
 module Docx
   module Elements
     module Containers
@@ -21,6 +21,8 @@ module Docx
         attr_reader :formatting
         
         def initialize(node, document_properties = {})
+          @coder = HTMLEntities.new(:expanded)
+
           @node = node
           @text_nodes = @node.xpath('w:t').map {|t_node| Elements::Text.new(t_node) }
           @text_nodes = @node.xpath('w:t|w:r/w:t').map {|t_node| Elements::Text.new(t_node) }
@@ -67,8 +69,9 @@ module Docx
         end
 
         # Return text as a HTML fragment with formatting based on properties.
-        def to_html(with_style_wrapper, allowed_tags)
+        def to_html(with_style_wrapper, allowed_tags, encode_entities)
           html = @text
+          html = @coder.encode(html, :named, :decimal) if encode_entities
           html = html_tag(:em, content: html) if italicized? && allowed_tags.include?(:em)
           html = html_tag(:strong, content: html) if bolded? && allowed_tags.include?(:strong)
           html = html_tag(:a, content: html, attributes: {href: href, target: "_blank"}) if hyperlink? && allowed_tags.include?(:a)

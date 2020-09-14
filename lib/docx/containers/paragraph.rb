@@ -42,10 +42,10 @@ module Docx
         end
 
         # Return paragraph as a <p></p> HTML fragment with formatting based on properties.
-        def to_html(with_style_wrapper: true, allowed_tags: [:a, :strong, :em])
+        def to_html(with_style_wrapper: true, allowed_tags: [:a, :strong, :em], encode_entities: false)
           html = ''
           text_runs.each do |text_run|
-            html << text_run.to_html(with_style_wrapper, allowed_tags)
+            html << text_run.to_html(with_style_wrapper, allowed_tags, encode_entities)
           end
 
           if with_style_wrapper
