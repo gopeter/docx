@@ -74,7 +74,7 @@ module Docx
           html = @coder.encode(html, :named, :decimal) if encode_entities
           html = html_tag(:em, content: html) if italicized? && allowed_tags.include?(:em)
           html = html_tag(:strong, content: html) if bolded? && allowed_tags.include?(:strong)
-          html = html_tag(:a, content: html, attributes: {href: href, target: "_blank"}) if hyperlink? && allowed_tags.include?(:a)
+          html = html_tag(:a, content: html, attributes: {href: href, target: "_blank", rel: "noopener"}) if hyperlink? && allowed_tags.include?(:a)
 
           if with_style_wrapper
             styles = {}

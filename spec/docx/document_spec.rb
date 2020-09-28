@@ -356,7 +356,7 @@ describe Docx::Document do
       @span_regex = /(\<span).+((?<=\>)\w+)(<\/span>)/
       @em_regex = /(\<em).+((?<=\>)\w+)(\<\/em\>)/
       @strong_regex = /(\<strong).+((?<=\>)\w+)(\<\/strong\>)/
-      @anchor_tag_regex = /\<a href="(.+)" target="_blank"\>(.+)\<\/a>/
+      @anchor_tag_regex = /\<a href="(.+)" target="_blank", rel="noopener"\>(.+)\<\/a>/
     end
 
     it 'should wrap pragraphs in a p tag' do
